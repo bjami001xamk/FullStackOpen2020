@@ -1,0 +1,30 @@
+POST http://localhost:3003/api/blogs
+content-type: application/json
+Authorization: bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VybmFtZSI6ImphbmltaWV0IiwiaWQiOiI1ZWQ0ODg5NGRmNDhlMzI4NzAwZTQyNzkiLCJpYXQiOjE1OTA5ODkxOTR9.NR-dAbLSC8gCUQijEbR8ILC8bMCBES9ooWesNv8R5oU
+
+{
+    "likes": "3",
+    "title": "testiblogi4",
+    "author": "testikäyttäjä4",
+    "url": "testiurli4",
+    "userId": "5ed3915fa9b9e24a906ff79f"
+}
+
+
+
+
+
+
+
+
+
+
+
+<!--content-type: application/json
+
+{ 
+    "username": "janimiet",
+    "name": "Jani Miettinen",
+    "password": "salainen"
+}
+

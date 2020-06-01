@@ -5,7 +5,6 @@ const Persons = (props) => {
     if(props.persons == '') {
         return(<></>)
     }
-
     let filteredPersons = props.persons.filter(person => person.name.includes(props.newFilter))
     const deletePerson = (person) => {
         personService
@@ -16,7 +15,6 @@ const Persons = (props) => {
                 )
                  
             ))
-        //props.setErrorText('dawdaw')
         props.setErrorText(`Deleted ${person.name} from database`)
         setTimeout(() => {
             props.setErrorText(null)

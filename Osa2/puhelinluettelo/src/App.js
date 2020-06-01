@@ -36,13 +36,20 @@ const App = () => {
     personService
       .addPerson(personObject)
       .then(returnedPerson => {
-        setPersons(persons.concat(returnedPerson))
-        setNewName('')
-        setNewNumber('')
-        setErrorText(`Added ${returnedPerson.name}`)
-        setTimeout(() => {
-          setErrorText(null)
-        }, 5000)
+        if(returnedPerson.name != undefined) {
+          setPersons(persons.concat(returnedPerson))
+          setNewName('')
+          setNewNumber('')
+          setErrorText(`Added ${returnedPerson.name}`)
+          setTimeout(() => {
+            setErrorText(null)
+          }, 5000)
+        } else {
+          setErrorText(returnedPerson.error)
+          setTimeout(() => {
+            setErrorText(null)
+          }, 5000)
+        }
       })
   }
 
