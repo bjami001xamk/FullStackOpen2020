@@ -3,16 +3,18 @@ import Blog from './components/Blog'
 import blogService from './services/blogs'
 import loginService from './services/login'
 import NewBlogForm from './components/NewBlogForm'
-
+import { setNotification } from './reducers/notificationReducer'
+import { useSelector, useDispatch } from 'react-redux'
 
 const App = () => {
   const [username, setUsername] = useState('')
   const [password, setPassword] = useState('')
   const [blogs, setBlogs] = useState([])
   const [user, setUser] = useState(null)
-  const [errorMessage, setNewErrorMessage] = useState('')
   const [createBlogVisible, setCreateBlogVisible] = useState(false)
-
+  const errorMessage = useSelector(state => state)
+  const dispatch = useDispatch()
+  
   useEffect(() => {
     blogService.getAll().then(blogs =>
       setBlogs( blogs )
@@ -42,14 +44,14 @@ const App = () => {
       setUser(user)
       setUsername('')
       setPassword('')
-      setNewErrorMessage('You have logged in successfully')
+      dispatch(setNotification('You have logged in successfully'))
       setTimeout(() => {
-        setNewErrorMessage('')
+        dispatch(setNotification(''))
       }, 3000)
     } catch (exception) {
-      setNewErrorMessage('Wrong username or password')
+      dispatch(setNotification('Wrong username or password'))
       setTimeout(() => {
-        setNewErrorMessage('')
+        dispatch(setNotification(''))
       }, 3000)
     }
 
@@ -64,13 +66,12 @@ const App = () => {
   const addBlog = async(blogToBeAdded) => {
 
     try {
-      console.log(blogToBeAdded)
       const blogThatHasBeenAdded = await blogService.create(blogToBeAdded)
       setBlogs(blogs.concat(blogThatHasBeenAdded))
-      setNewErrorMessage(`a new blog ${blogToBeAdded.title} by ${blogToBeAdded.author} added`)
+      dispatch(setNotification(`a new blog ${blogToBeAdded.title} by ${blogToBeAdded.author} added`))
       setCreateBlogVisible(false)
       setTimeout(() => {
-        setNewErrorMessage('')
+        dispatch(setNotification(''))
       }, 3000)
 
 
