@@ -10,7 +10,6 @@ import { setUser } from './reducers/userReducer'
 import { BrowserRouter as Router, Switch, Route,Link,useParams } from 'react-router-dom'
 import Users from './components/Users'
 import Userlist from './components/Userlist'
-import Singleblog from './components/Singleblog'
 
 const App = () => {
   const [username, setUsername] = useState('')
@@ -147,7 +146,7 @@ const App = () => {
       </>
     )
   }
-  //const id = useParams().id
+ 
   return (
     <Router>
       <div>
