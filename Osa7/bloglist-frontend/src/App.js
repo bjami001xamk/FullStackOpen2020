@@ -7,7 +7,7 @@ import { setNotification } from './reducers/notificationReducer'
 import { useSelector, useDispatch } from 'react-redux'
 import { setBlogs } from './reducers/blogReducer'
 import { setUser } from './reducers/userReducer'
-import { BrowserRouter as Router, Switch, Route,Link } from 'react-router-dom'
+import { BrowserRouter as Router, Switch, Route,Link,useParams } from 'react-router-dom'
 import Users from './components/Users'
 import Userlist from './components/Userlist'
 import Singleblog from './components/Singleblog'
@@ -121,6 +121,8 @@ const App = () => {
   const blogForm = () => {
     const hideWhenVisible = { display: createBlogVisible ? 'none' : '' }
     const showWhenVisible = { display: createBlogVisible ? '' : 'none' }
+
+    
     return(
       <>
         <div style={hideWhenVisible}>
@@ -136,14 +138,16 @@ const App = () => {
           {blogs.sort((a, b) => {
             return b.likes - a.likes
           }).map(blog =>
-            <Blog key={blog.id} blog={blog} setBlogs={setBlogs} user={user} />
+            <div>
+              <Link to={`/blogs/${blog.id}`}>{blog.title} {blog.author}</Link>
+            </div>
           )
           }
         </div>
       </>
     )
   }
-
+  //const id = useParams().id
   return (
     <Router>
       <div>
@@ -161,11 +165,11 @@ const App = () => {
               <Users users={users} userBlogsQuantity={userBlogsQuantity} />
             </Route>
             <Route path='/blogs/:id'>
-              <Singleblog blogs={blogs} />
+            <Blog blogs={blogs} setBlogs={setBlogs} user={user}/>
             </Route>
             <Route path='/'>
               <div>
-                {blogForm()}
+              {blogForm()}
               </div>
             </Route>
           </Switch>
