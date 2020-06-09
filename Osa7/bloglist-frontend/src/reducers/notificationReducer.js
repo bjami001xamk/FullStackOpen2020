@@ -11,6 +11,9 @@ const notificationReducer = (state = '', action) => {
   
 }
 
+
+
+
 export const setNotification = (message) => {
     console.log(message)
     return {

@@ -39,5 +39,10 @@ const deleteBlog = async(id) => {
   return newBlogs
 }
 
+const getUsers = async() => {
+  const response = await axios.get('/api/users')
+  return response.data
+}
 
-export default { getAll, create, setToken, update, deleteBlog, token }
+
+export default { getAll, create, setToken, update, deleteBlog, token, getUsers}

@@ -1,8 +1,12 @@
 import React, { useState } from 'react'
 import blogServices from '../services/blogs'
 import PropTypes from 'prop-types'
+import { UseDispatch, useDispatch } from 'react-redux'
+
+
 
 const Blog = ({ blog, setBlogs, user }) => {
+  const dispatch = useDispatch()
   const [singleBlogVisible, setSingleBLogVisible] = useState(false)
   const showWhenVisible = { display: singleBlogVisible ? '' : 'none' }
   const blogStyle = {
@@ -24,14 +28,14 @@ const Blog = ({ blog, setBlogs, user }) => {
       url: blog.url
     }
     const blogsAfterUpdate = await blogServices.update(blogThatIsLeaving, serverUrl)
-    setBlogs(blogsAfterUpdate)
+    dispatch(setBlogs(blogsAfterUpdate))
   }
 
   const removeBlog = async() => {
     if (window.confirm(`Remove blog: ${blog.title}?`)) {
       const id = blog.id
       const blogsAfterDeletion = await blogServices.deleteBlog(id)
-      setBlogs(blogsAfterDeletion)
+      dispatch(setBlogs(blogsAfterDeletion))
     }
   }
 
