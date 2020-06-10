@@ -1,0 +1,17 @@
+{
+  "name": "kirjailijat",
+  "version": "1.0.0",
+  "description": "",
+  "main": "library-backend.js",
+  "scripts": {
+    "test": "testaas"
+  },
+  "author": "Jani Miettinen",
+  "license": "ISC",
+  "dependencies": {
+    "apollo-server": "^2.14.3",
+    "graphql": "^15.1.0",
+    "nodemon": "^2.0.4",
+    "uuid": "^8.1.0"
+  }
+}
