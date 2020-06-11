@@ -123,6 +123,7 @@ const resolvers = {
     authorCount: () => authors.length,
     allBooks: (root, args) => {
       if(!args.author && !args.genre){
+        
         return books
       } else if (!args.genre) {
         return books.filter(book => book.author === args.author)
@@ -141,6 +142,7 @@ const resolvers = {
     bookCount: (root) =>
       books.filter(book => book.author === root.name).length
   },
+ 
   Mutation: {
     addBook: (root, args) => {
       const book = { ...args, id: uuid() }
@@ -155,9 +157,7 @@ const resolvers = {
 
       books = books.concat(book)
       return book
-    }
-  },
-  Mutation: {
+    },
     editAuthor: (root, args) => {
       const authorInDb = authors.find(author => author.name === args.name)
       if(!authorInDb){
