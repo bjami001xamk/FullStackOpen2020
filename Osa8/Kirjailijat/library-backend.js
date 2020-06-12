@@ -1,5 +1,21 @@
 const { ApolloServer, gql } = require('apollo-server')
 const { v1: uuid } = require('uuid');
+const mongoose = require('mongoose')
+
+mongoose.set('useFindAndModify', false)
+
+const MONGODB_URI = 'mongodb+srv://KayttajaOsa4:salasanaosa4@testia-zhaxe.mongodb.net/test?retryWrites=true&w=majority'
+
+console.log('connecting to', MONGODB_URI)
+
+mongoose.connect(MONGODB_URI, { useNewUrlParser: true, useUnifiedTopology: true })
+  .then(() => {
+    console.log('connected to MongoDB')
+  })
+  .catch((error) => {
+    console.log('error connection to MongoDB', error.message)
+  })
+
 
 let authors = [
   {
