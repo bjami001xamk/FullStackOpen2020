@@ -94,7 +94,7 @@ const resolvers = {
           name: args.author
         })
         try{
-        await newAuthor.save()
+          await newAuthor.save()
         } catch (error) {
           throw new UserInputError(error.message, {
             invalidArgs: args,
