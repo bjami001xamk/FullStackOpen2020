@@ -1,14 +1,18 @@
-import React from 'react'
-import { gql, useQuery } from '@apollo/client'
+import React, {useState, useEffect} from 'react'
+import { gql, useQuery, useLazyQuery } from '@apollo/client'
 
 
 
 const Books = (props) => {
+  const [filter, setFilter] = useState('')
+  const [ filteredGenres, setFilteredGenres ] = useState([])
+  const [ books, setBooks ] = useState([])
   const ALL_BOOKS = gql`
-    query{
-      allBooks{
+    query {
+      allBooks {
         title,
         published,
+        genres,
         author{
           name,
           born
@@ -16,9 +20,56 @@ const Books = (props) => {
       }
     }
   `
+
+  const FILTERED_BOOKS = gql`
+    query books ($genreToFilter: String!) {
+      allBooks(genre: $genreToFilter) {
+        title,
+        published,
+        genres,
+        author{
+          name,
+          born
+        }
+      }
+    }
+  `
+
+  const [activatequery, {loading, data}] = useLazyQuery(FILTERED_BOOKS, {variables: {genreToFilter: filter}, pollInterval: 2000, fetchPolicy: 'network-only'})
+  const queryFiltered = (genreToFilter) => {
+    if(genreToFilter === '') {
+      setFilter('')
+    } else {
+      setFilter(genreToFilter.genre)
+    }
+    activatequery() 
+  }
+
+  useEffect(() => {
+    if(data) {
+      setBooks(data.allBooks)
+    }
+  }, [data])
+
+
   const result = useQuery(ALL_BOOKS, {
-    pollInterval: 2000
+    
   })
+  
+  useEffect(() => {
+    if(!result.loading) {
+      setBooks(result.data.allBooks)
+      result.data.allBooks.forEach(book => {
+        book.genres.forEach(genre => {
+          filteredGenres.push(genre)
+          
+        })
+      })
+      
+      setFilteredGenres([...new Set(filteredGenres)])
+    }
+  },[result])
+  
   if (!props.show) {
     return null
   }
@@ -28,8 +79,10 @@ const Books = (props) => {
     return <div>Loading...</div>
   }
   
-  const books = result.data.allBooks
-  console.log(books)
+  if(filteredGenres.length === 0 ) {
+    return null
+  }
+  
   return (
     <div>
       <h2>books</h2>
@@ -54,6 +107,10 @@ const Books = (props) => {
           )}
         </tbody>
       </table>
+      {filteredGenres.map(genre => 
+        <button key={genre} type='button' onClick={() => queryFiltered({genre})}>{genre}</button>
+      )}
+      <button type='button' onClick={() => queryFiltered('')}>all genres</button>
     </div>
   )
 }

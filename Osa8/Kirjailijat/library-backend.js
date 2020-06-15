@@ -1,9 +1,13 @@
-const { ApolloServer, gql } = require('apollo-server')
+const { ApolloServer, gql, UserInputError, AuthenticationError } = require('apollo-server')
 const { v1: uuid } = require('uuid');
 const mongoose = require('mongoose')
 const books = require('./models/Book')
 const authors = require('./models/Author')
-
+const User = require('./models/User')
+const jwt = require('jsonwebtoken')
+const { PubSub } = require('apollo-server')
+const JWT_SECRET = 'salainensalasana'
+const pubsub = new PubSub()
 mongoose.set('useFindAndModify', false)
 
 const MONGODB_URI = 'mongodb+srv://KayttajaOsa4:salasanaosa4@testia-zhaxe.mongodb.net/test?retryWrites=true&w=majority'
@@ -25,6 +29,7 @@ const typeDefs = gql`
     authorCount: Int!
     allBooks(author: String,genre: String): [Book]
     allAuthors: [Author!]!
+    me: User
   }
   type Book {
     title: String!
@@ -38,6 +43,17 @@ const typeDefs = gql`
     born: Int
     bookCount: Int!
   }
+
+  type User {
+    username: String!
+    favoriteGenre: String!
+    id: ID!
+  }
+
+  type Token {
+    value: String!
+  }
+
   type Mutation {
     addBook(
       title: String!
@@ -49,7 +65,23 @@ const typeDefs = gql`
       name: String!
       setBornTo: Int!
     ): Author
+
+
+
+    createUser(
+      username: String!
+      favoriteGenre: String!
+    ): User
+    login(
+      username: String!
+      password: String!
+    ): Token
+
   }
+  type Subscription {
+    bookAdded: Book!
+  }
+
 `
 
 const resolvers = {
@@ -74,7 +106,10 @@ const resolvers = {
         return await books.filter(book => book.author === args.author).filter(book => book.genres.find(genre => genre === args.genre))
       }*/
     },
-    allAuthors: () => authors.find({})
+    allAuthors: () => authors.find({}),
+    me: (root, args, context) => {
+      return context.currentUser
+    }
     
   },
   Author: {
@@ -86,7 +121,12 @@ const resolvers = {
  
   
   Mutation: {
-    addBook: async (root, args) => {
+    addBook: async (root, args, context) => {
+      const currentUser = context.currentUser
+      if(!currentUser){
+        throw new AuthenticationError("not authenticated")
+      }
+
       const authorInDb = await authors.find({ name: args.author })
       const newBook = new books({ ...args })
       if(!authorInDb[0]) { 
@@ -109,9 +149,16 @@ const resolvers = {
           invalidArgs: args,
         })
       }
+
+      pubsub.publish('BOOK_ADDED', { bookAdded: newBook})
       return newBook
     },
-    editAuthor: async (root, args) => {
+    editAuthor: async (root, args, context) => {
+      const currentUser = context.currentUser
+      if(!currentUser){
+        throw new AuthenticationError("not authenticated")
+      }
+
       const authorInDb = await authors.findOne({ name: args.name })
       if(!authorInDb){
         return null
@@ -119,15 +166,49 @@ const resolvers = {
       authorInDb.born = args.setBornTo
       authorInDb.save()
       return authorInDb
+    },
+    createUser: async (root, args) => {
+      console.log(args)
+      newUser = new User({ ...args })
+      console.log(newUser)
+      return newUser.save()
+    },
+    login: async (root, args) => {
+      const currentUser = await User.findOne({ username: args.username })
+      if(!currentUser || args.password !== 'secret' ) {
+        throw new UserInputError('wrong credentials')
+      }
+      const userForToken = {
+        username: currentUser.username,
+        id: currentUser._id
+      }
+      return { value: jwt.sign(userForToken, JWT_SECRET) }
+    }
+  },
+  Subscription: {
+    bookAdded: {
+      subscribe: () => pubsub.asyncIterator(['BOOK_ADDED'])
     }
   }
+
 }
 
 const server = new ApolloServer({
   typeDefs,
   resolvers,
+  context: async ({ req }) => {
+    const auth = req ? req.headers.authorization : null
+    if(auth && auth.toLowerCase().startsWith('bearer ')) {
+      const decodedToken = jwt.verify(
+        auth.substring(7), JWT_SECRET
+      )
+      const currentUser = await User.findById(decodedToken.id)
+      return { currentUser }
+    }
+  }
 })
 
-server.listen().then(({ url }) => {
+server.listen().then(({ url, subscriptionsUrl }) => {
   console.log(`Server ready at ${url}`)
+  console.log(`Subscriptions ready at ${subscriptionsUrl}`)
 })

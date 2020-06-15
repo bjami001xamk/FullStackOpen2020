@@ -18,7 +18,19 @@ const ADD_BOOK = gql`
       }
     `
 
-
+    const FILTERED_BOOKS = gql`
+    query books ($genreToFilter: String!) {
+      allBooks(genre: $genreToFilter) {
+        title,
+        published,
+        genres,
+        author{
+          name,
+          born
+        }
+      }
+    }
+  `
 
 const NewBook = (props) => {
   const [title, setTitle] = useState('')
