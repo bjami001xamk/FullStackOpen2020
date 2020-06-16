@@ -44,11 +44,6 @@ const App = () => {
       })
     }   
   }
-  setTimeout(() => {
-    console.log(client.readQuery({ query: FILTERED_BOOKS }))
-  },3000)
-  
-
 
 
 
