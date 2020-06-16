@@ -1,13 +1,7 @@
 import React, {useState, useEffect} from 'react'
 import { gql, useQuery, useLazyQuery } from '@apollo/client'
 
-
-
-const Books = (props) => {
-  const [filter, setFilter] = useState('')
-  const [ filteredGenres, setFilteredGenres ] = useState([])
-  const [ books, setBooks ] = useState([])
-  const ALL_BOOKS = gql`
+export const ALL_BOOKS = gql`
     query {
       allBooks {
         title,
@@ -20,20 +14,27 @@ const Books = (props) => {
       }
     }
   `
-
-  const FILTERED_BOOKS = gql`
-    query books ($genreToFilter: String!) {
-      allBooks(genre: $genreToFilter) {
-        title,
-        published,
-        genres,
-        author{
-          name,
-          born
-        }
+export const FILTERED_BOOKS = gql`
+  query books ($genreToFilter: String!) {
+    allBooks(genre: $genreToFilter) {
+      title,
+      published,
+      genres,
+      author{
+        name,
+        born
       }
     }
-  `
+  }
+`
+
+const Books = (props) => {
+  const [filter, setFilter] = useState('')
+  const [ filteredGenres, setFilteredGenres ] = useState([])
+  const [ books, setBooks ] = useState([])
+  
+
+  
 
   const [activatequery, {loading, data}] = useLazyQuery(FILTERED_BOOKS, {variables: {genreToFilter: filter}, pollInterval: 2000, fetchPolicy: 'network-only'})
   const queryFiltered = (genreToFilter) => {

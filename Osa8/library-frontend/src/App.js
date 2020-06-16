@@ -4,8 +4,23 @@ import Authors from './components/Authors'
 import Books from './components/Books'
 import NewBook from './components/NewBook'
 import Login from './components/Login'
-import { useApolloClient } from '@apollo/client'
+import { useApolloClient, useSubscription, gql } from '@apollo/client'
 import Recommend from './components/Recommend'
+import { FILTERED_BOOKS } from './components/Books'
+
+export const BOOK_ADDED = gql`
+  subscription{
+    bookAdded{
+      title,
+      author{
+        name,
+        born
+      }
+      published,
+      genres}
+  }
+  `
+
 
 const App = () => {
   const [page, setPage] = useState('authors')
@@ -14,12 +29,48 @@ const App = () => {
   const VisibleWhenLoggedIn = token !== null ? {display:''} : {display:'none'}
   const HiddenWhenLoggedIn = token !== null ? {display:'none'} : {display:''}
   const client = useApolloClient()
+
+
+
+  const updateCacheWith = (addedBook) => {
+    const includedIn = (set, object) => 
+      set.map(p => p.id).includes(object.id)  
+
+    const dataInStore = client.readQuery({ query: FILTERED_BOOKS })
+    if (!includedIn(dataInStore.allBooks, addedBook)) {
+      client.writeQuery({
+        query: FILTERED_BOOKS,
+        data: { allBooks : dataInStore.allBooks.concat(addedBook) }
+      })
+    }   
+  }
+  setTimeout(() => {
+    console.log(client.readQuery({ query: FILTERED_BOOKS }))
+  },3000)
   
+
+
+
+
+
+  useSubscription(BOOK_ADDED, {
+    onSubscriptionData: ({ subscriptionData }) => {
+      console.log(subscriptionData)
+      alert('new Book has arrived ', subscriptionData)
+      updateCacheWith(subscriptionData.data.bookAdded)
+    }
+  })
+
+
+
+
   const logOut = () => {
     setToken(null)
     localStorage.clear()
     client.resetStore()
   }
+
+
 
   return (
     <div>
