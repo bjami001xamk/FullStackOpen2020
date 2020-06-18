@@ -1,4 +1,4 @@
-import { PatientType, NewPatientType } from '../types';
+import { PatientType, NewPatientType, Gender } from '../types';
 /* eslint-disable @typescript-eslint/no-explicit-any */
 
 const validatefields = (patientObject : NewPatientType) : PatientType => {
@@ -7,11 +7,22 @@ const validatefields = (patientObject : NewPatientType) : PatientType => {
         name: checkIfItsString(patientObject.name),
         dateOfBirth: checkIfItsString(patientObject.dateOfBirth),
         ssn: checkIfItsString(patientObject.ssn),
-        gender: checkIfItsString(patientObject.gender),
+        gender: validateGender(patientObject.gender),
         occupation: checkIfItsString(patientObject.occupation)
     };
 
     return validatedObject;
+};
+
+const isGender = (incomingValue : any): incomingValue is Gender => {
+    return Object.values(Gender).includes(incomingValue);
+};
+
+const validateGender = ( gender: any): Gender => {
+    if(!gender || !isString(gender) || !isGender(gender)) {
+        throw new Error('Incorrrect or missing gender: ' + String(gender));
+    }
+    return gender;
 };
 
 const checkIfItsString = (incomingValue : any) : string => {
