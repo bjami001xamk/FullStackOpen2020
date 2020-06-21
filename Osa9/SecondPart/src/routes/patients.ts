@@ -28,6 +28,12 @@ const addPatientToDB = (patientObject : NewPatientType) : PatientType => {
     return newPatientObject;
 };
 
+const findPatient = (id : string) => {
+    const patient = PatientJson.find(person => person.id === id);
+    return patient;
+};
+
+
 
 router.get('/', (_req, res) => {
     res.send(getPatientsWithoutSSN());
@@ -42,6 +48,12 @@ router.post('/', (req, res) => {
         res.status(400).send(e.message);
     }
     
+});
+
+router.get('/:id', (req, res) => {
+
+    
+    res.send(findPatient(req.params.id));
 });
 
 /*const validatefiled = (patientObject: NewPatientType) => {

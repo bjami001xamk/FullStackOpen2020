@@ -25,6 +25,11 @@ export interface PatientType {
     occupation:string
 }
 
+// eslint-disable-next-line @typescript-eslint/no-empty-interface
+export interface Entry{
+
+}
+
 export interface NewPatientType {
     name:string,
     dateOfBirth:string,
@@ -38,3 +43,5 @@ export enum Gender {
     Female = 'female',
     Other = 'other'
 }
+
+export type PublicPatient = Omit<PatientType, 'ssn' | 'entries' >;

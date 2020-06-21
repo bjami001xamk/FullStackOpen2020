@@ -1,17 +1,83 @@
-import React from 'react';
-import ReactDOM from 'react-dom';
-import './index.css';
-import App from './App';
-import * as serviceWorker from './serviceWorker';
+import React from "react";
+import ReactDOM from "react-dom";
+import Header from './components/Header'
+import Total from './components/Total'
+import Content from './components/Content'
 
-ReactDOM.render(
-  <React.StrictMode>
-    <App />
-  </React.StrictMode>,
-  document.getElementById('root')
-);
+interface CoursePartBase {
+  name: string;
+  exerciseCount: number;
+}
 
-// If you want your app to work offline and load faster, you can change
-// unregister() to register() below. Note this comes with some pitfalls.
-// Learn more about service workers: https://bit.ly/CRA-PWA
-serviceWorker.unregister();
+interface CoursePartOne extends CoursePartBase {
+  name: "Fundamentals";
+}
+
+interface CoursePartTwo extends CoursePartBase {
+  name: "Using props to pass data";
+  groupProjectCount: number;
+}
+
+interface CoursePartThree extends CoursePartBase {
+  name: "Deeper type usage";
+  exerciseSubmissionLink: string;
+}
+interface CoursePartFour extends CoursePartBase {
+  description: string;
+}
+export type CoursePart = CoursePartOne | CoursePartTwo | CoursePartThree | CoursePartFour;
+const App: React.FC = () => {
+  
+  
+ 
+  const courseName = "Half Stack application development";
+  const courseParts: CoursePart[] = [
+    {
+      name: "Fundamentals",
+      exerciseCount: 10,
+      description: "This is an awesome course part"
+    },
+    {
+      name: "Using props to pass data",
+      exerciseCount: 7,
+      groupProjectCount: 3
+    },
+    {
+      name: "Deeper type usage",
+      exerciseCount: 14,
+      description: "Confusing description",
+      exerciseSubmissionLink: "https://fake-exercise-submit.made-up-url.dev"
+    }
+  ];
+
+  return (
+    <div>
+      <Header courseName={courseName} />
+      <Content courseParts={courseParts}/>
+      <Total courseParts={courseParts}/>
+    </div>
+  );
+};
+
+interface ContentProps{
+  courseParts: CoursePart[];
+}
+
+  /*return (
+      <div>
+          {courseParts.map(coursePart => {
+              <Part coursePart={coursePart} />
+          })}
+      </div>
+)*/
+/*
+const Part = () => {
+  return '';
+}
+*/
+
+
+
+
+
+ReactDOM.render(<App />, document.getElementById("root"));
