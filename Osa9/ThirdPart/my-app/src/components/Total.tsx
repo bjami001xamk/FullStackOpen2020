@@ -10,7 +10,6 @@ interface TotalProps {
 }
 
 const Total : React.FC<TotalProps> = ({courseParts}) => {
-    console.log(courseParts)
     return (
         <p>
             Number of exercises{" "}

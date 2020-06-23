@@ -7,7 +7,7 @@ const router = express.Router();
 
 const patientData: PatientType[] = PatientJson;
 
-const getPatientsWithoutSSN = () : Omit<PatientType, 'ssn'>[] => {
+const getPatientsWithoutSSN = () : Omit<PatientType, 'ssn' | 'entries'>[] => {
     return patientData.map(({id, name, dateOfBirth, gender, occupation}) => ({
         id,
         name,
@@ -28,10 +28,7 @@ const addPatientToDB = (patientObject : NewPatientType) : PatientType => {
     return newPatientObject;
 };
 
-const findPatient = (id : string) => {
-    const patient = PatientJson.find(person => person.id === id);
-    return patient;
-};
+
 
 
 
@@ -50,6 +47,15 @@ router.post('/', (req, res) => {
     
 });
 
+
+
+
+
+const findPatient = (id : string) => {
+    const patient = PatientJson.find(person => person.id === id);
+    return patient;
+};
+
 router.get('/:id', (req, res) => {
 
     
@@ -59,5 +65,10 @@ router.get('/:id', (req, res) => {
 /*const validatefiled = (patientObject: NewPatientType) => {
     console.log(patientObject);
 };*/
+
+
+
+
+
 
 export default router;

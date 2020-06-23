@@ -8,7 +8,8 @@ const validatefields = (patientObject : NewPatientType) : PatientType => {
         dateOfBirth: checkIfItsString(patientObject.dateOfBirth),
         ssn: checkIfItsString(patientObject.ssn),
         gender: validateGender(patientObject.gender),
-        occupation: checkIfItsString(patientObject.occupation)
+        occupation: checkIfItsString(patientObject.occupation),
+        entries: patientObject.entries
     };
 
     return validatedObject;

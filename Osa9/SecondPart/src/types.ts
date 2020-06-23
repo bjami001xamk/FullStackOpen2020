@@ -22,7 +22,8 @@ export interface PatientType {
     dateOfBirth:string,
     ssn: string,
     gender: string,
-    occupation:string
+    occupation:string,
+    entries: Entry[]
 }
 
 // eslint-disable-next-line @typescript-eslint/no-empty-interface
@@ -35,7 +36,8 @@ export interface NewPatientType {
     dateOfBirth:string,
     ssn: string,
     gender: string,
-    occupation:string
+    occupation:string,
+    entries: Entry[]
 }
 
 export enum Gender {

@@ -26,10 +26,9 @@ interface CoursePartFour extends CoursePartBase {
   description: string;
 }
 export type CoursePart = CoursePartOne | CoursePartTwo | CoursePartThree | CoursePartFour;
+
 const App: React.FC = () => {
-  
-  
- 
+
   const courseName = "Half Stack application development";
   const courseParts: CoursePart[] = [
     {
@@ -58,26 +57,6 @@ const App: React.FC = () => {
     </div>
   );
 };
-
-interface ContentProps{
-  courseParts: CoursePart[];
-}
-
-  /*return (
-      <div>
-          {courseParts.map(coursePart => {
-              <Part coursePart={coursePart} />
-          })}
-      </div>
-)*/
-/*
-const Part = () => {
-  return '';
-}
-*/
-
-
-
 
 
 ReactDOM.render(<App />, document.getElementById("root"));
