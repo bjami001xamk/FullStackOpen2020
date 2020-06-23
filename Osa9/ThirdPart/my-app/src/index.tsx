@@ -9,7 +9,7 @@ interface CoursePartBase {
   exerciseCount: number;
 }
 
-interface CoursePartOne extends CoursePartBase {
+interface CoursePartOne extends CoursePartFour {
   name: "Fundamentals";
 }
 
@@ -18,14 +18,18 @@ interface CoursePartTwo extends CoursePartBase {
   groupProjectCount: number;
 }
 
-interface CoursePartThree extends CoursePartBase {
+interface CoursePartThree extends CoursePartFour {
   name: "Deeper type usage";
   exerciseSubmissionLink: string;
+}
+interface CoursePartFive extends CoursePartFour {
+  name: "testia",
+
 }
 interface CoursePartFour extends CoursePartBase {
   description: string;
 }
-export type CoursePart = CoursePartOne | CoursePartTwo | CoursePartThree | CoursePartFour;
+export type CoursePart = CoursePartOne | CoursePartTwo | CoursePartThree | CoursePartFive;
 
 const App: React.FC = () => {
 
@@ -46,6 +50,11 @@ const App: React.FC = () => {
       exerciseCount: 14,
       description: "Confusing description",
       exerciseSubmissionLink: "https://fake-exercise-submit.made-up-url.dev"
+    },
+    {
+      name: "testia",
+      exerciseCount: 9,
+      description: "testidescriptioni"
     }
   ];
 
