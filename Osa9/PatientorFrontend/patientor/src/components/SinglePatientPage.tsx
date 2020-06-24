@@ -4,6 +4,8 @@ import axios from 'axios';
 import { apiBaseUrl } from "../constants";
 import { useStateValue, addPatient } from "../state";
 import { Patient } from '../types'
+import EntryComponenent from './EntryComponent';
+import AddEntryFrom from '../components/AddEntryForm'; 
 
 const SinglePatientPage: React.FC = () => {
     const [{ patients, diagnoses }, dispatch] = useStateValue();
@@ -36,7 +38,6 @@ const SinglePatientPage: React.FC = () => {
     if(!currentPerson.ssn) {
         return <>loading</>
     }
-    console.log(diagnoses)
 
     return(
         <div>
@@ -46,15 +47,17 @@ const SinglePatientPage: React.FC = () => {
             <p>occupation:{currentPerson.occupation}</p>
             <h4>Entries</h4>
             {currentPerson.entries.map(entry => (
-                <div>
-                    <p key={entry.id}>{entry.date} {entry.description}</p>
+                <div key={entry.id}>
+                    
                     {entry.diagnosisCodes?.map(code => (
-                        <p>{code} {diagnoses[code].name}</p>
+                        <p key = {code}>{code} {diagnoses[code].name}</p>
                     ))}
+                    <EntryComponenent entry={entry}/>
+                    
                 </div>
                 
             ))}
-
+            <AddEntryFrom />
         </div>
     )
 

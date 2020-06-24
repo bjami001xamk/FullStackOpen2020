@@ -1,7 +1,7 @@
 import express from 'express';
-import { PatientType, NewPatientType } from '../types';
+import { PatientType, NewPatientType, Entry } from '../types';
 import PatientJson from '../../data/patients';
-import validatefields from '../utils/validatefields';
+import { validatefields, validateEntry } from '../utils/validatefields';
 
 const router = express.Router();
 
@@ -65,6 +65,45 @@ router.get('/:id', (req, res) => {
 /*const validatefiled = (patientObject: NewPatientType) => {
     console.log(patientObject);
 };*/
+
+
+
+
+
+
+router.post('/:id/entries', (req, res) => {
+    // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
+    const incomingEntry : Entry = req.body;
+    const id = req.params.id;
+
+    try {
+        const newEntry = validateEntry(incomingEntry);
+        const currentPatient = patientData.find(patient => patient.id === id);
+        
+        if(currentPatient) {
+            currentPatient.entries.push(newEntry);
+            res.send(currentPatient).end();
+        } else {
+            res.status(400).send('cannot find that patient');
+        }
+
+    } catch (e) {
+        console.log(e);
+        res.status(404).end();
+    }
+
+});
+
+
+
+
+
+
+
+
+
+
+
 
 
 

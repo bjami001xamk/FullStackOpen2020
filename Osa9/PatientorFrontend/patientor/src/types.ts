@@ -6,8 +6,6 @@ interface BaseEntry {
   diagnosisCodes?: Array<DiagnoseType['code']>;
 }
 
-
-
 interface HealthCheckEntry extends BaseEntry {
   type: "HealthCheck";
   healthCheckRating: HealthCheckRating
@@ -34,6 +32,7 @@ interface OccupationalHealthcareEntry extends BaseEntry{
       endDate: string;
   }
 }
+
 export interface DiagnoseType {
   code: string,
   name: string,
@@ -49,6 +48,8 @@ export interface Diagnosis {
   name: string;
   latin?: string;
 }
+
+export type HealthCheckEntryOutgoing = Omit<HealthCheckEntry, 'id'>;
 
 export enum Gender {
   Male = "male",
