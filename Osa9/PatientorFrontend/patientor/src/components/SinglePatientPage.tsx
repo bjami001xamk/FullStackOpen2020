@@ -18,7 +18,7 @@ const SinglePatientPage: React.FC = () => {
         })
     }
     useEffect(() => {
-        if(patients[id] && !currentPerson) {
+        if(patients[id]) {
             setCurrentPerson(patients[id])
         }
         if(currentPerson) {
